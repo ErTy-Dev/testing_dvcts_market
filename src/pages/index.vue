@@ -156,7 +156,7 @@ const loadMoreTrigger = ref<HTMLElement | null>(null);
 const products = ref<ProductListItem[]>([]);
 const hasMore = ref(true);
 const loadingMore = ref(false);
-const error = ref<any>(null);
+const error = ref<Error | null>(null);
 
 const api = useProductApi();
 
@@ -209,8 +209,12 @@ async function loadMore() {
       products.value.push(...newData.products);
       hasMore.value = products.value.length < newData.total;
     }
-  } catch (err) {
-    error.value = err;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error.value = err;
+    } else {
+      error.value = new Error(String(err));
+    }
   } finally {
     loadingMore.value = false;
   }

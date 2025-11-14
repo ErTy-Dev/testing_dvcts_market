@@ -23,12 +23,12 @@ interface Props {
   showRetryButton?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  errorTitle: 'Произошла ошибка',
-  errorMessage: 'Не удалось загрузить данные. Пожалуйста, попробуйте позже.',
-  showHomeButton: true,
-  showRetryButton: false,
-});
+const {
+  errorTitle = 'Произошла ошибка',
+  errorMessage = 'Не удалось загрузить данные. Пожалуйста, попробуйте позже.',
+  showHomeButton = true,
+  showRetryButton = false,
+} = defineProps<Props>();
 
 const error = ref<Error | null>(null);
 

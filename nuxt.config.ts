@@ -1,6 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config';
 import path from 'path';
-import compress from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
@@ -151,7 +150,7 @@ export default defineNuxtConfig({
               open: false,
               gzipSize: true,
               brotliSize: true,
-            }) as any,
+            }),
           ]
         : []),
     ],

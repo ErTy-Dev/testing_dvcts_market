@@ -1,9 +1,15 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
 
-const props = defineProps<{
-  class?: HTMLAttributes['class'];
-}>();
+const props = withDefaults(
+  defineProps<{
+    class?: HTMLAttributes['class'];
+  }>(),
+  {
+    class: undefined,
+  }
+);
 </script>
 
 <template>

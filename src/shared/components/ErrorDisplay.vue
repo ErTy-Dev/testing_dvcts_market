@@ -23,10 +23,10 @@
         {{ message }}
       </p>
       <div class="flex gap-4 justify-center">
-        <SharedUiButton v-if="showHomeButton" @click="navigateTo('/')" variant="default">
+        <SharedUiButton v-if="showHomeButton" variant="default" @click="navigateTo('/')">
           Вернуться на главную
         </SharedUiButton>
-        <SharedUiButton v-if="showRetryButton" @click="$emit('retry')" variant="secondary">
+        <SharedUiButton v-if="showRetryButton" variant="secondary" @click="$emit('retry')">
           Попробовать снова
         </SharedUiButton>
       </div>

@@ -140,10 +140,10 @@
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Предложения продавцов</h3>
               <div class="flex flex-wrap gap-2.5">
                 <SharedUiButton
-                  @click="handleSortChange('price')"
                   :variant="sortBy === 'price' ? 'default' : 'outline'"
                   size="sm"
                   class="gap-2"
+                  @click="handleSortChange('price')"
                 >
                   <svg
                     v-if="sortBy === 'price'"
@@ -176,10 +176,10 @@
                   По цене
                 </SharedUiButton>
                 <SharedUiButton
-                  @click="handleSortChange('delivery')"
                   :variant="sortBy === 'delivery' ? 'default' : 'outline'"
                   size="sm"
                   class="gap-2"
+                  @click="handleSortChange('delivery')"
                 >
                   <svg
                     v-if="sortBy === 'delivery'"
@@ -304,7 +304,7 @@ const { data: productDetail, pending } = await useAsyncData<ProductDetail>(
 const {
   data: offersData,
   pending: offersPending,
-  refresh: refreshOffers,
+  refresh: _refreshOffers,
 } = await useAsyncData(
   () => `product-${productId}-offers-${sortBy.value}`,
   () => api.getProductOffers(productId, sortBy.value),
@@ -322,7 +322,7 @@ const config = useRuntimeConfig();
 const baseUrl =
   typeof window !== 'undefined'
     ? window.location.origin
-    : config.public.apiBase?.replace('/api', '')!;
+    : config.public.apiBase?.replace('/api', '') || '';
 const productUrl = `${baseUrl}/products/${productId}`;
 
 // Формируем описание из характеристик
@@ -352,7 +352,7 @@ const minPriceCurrency = computed(() => {
 });
 
 // Форматирование цены для SEO
-const formattedPrice = computed(() => {
+const _formattedPrice = computed(() => {
   if (!minPrice.value || !minPriceCurrency.value) return null;
   return `${minPrice.value.toFixed(2)} ${minPriceCurrency.value}`;
 });

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { generateProductsList, generateProductDetail } from '../data/dataGenerator.js';
-import type { ProductsListResponse, ProductDetail } from '@/entity/product/model/types';
 
 const router = Router();
 
@@ -33,6 +32,7 @@ router.get('/', (req, res) => {
       pageSize,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
@@ -50,7 +50,7 @@ router.get('/:id/offers', (req, res) => {
       return res.status(404).json({ error: `Product with id ${id} not found` });
     }
 
-    let offers = detail.offers ? [...detail.offers] : [];
+    const offers = detail.offers ? [...detail.offers] : [];
 
     // Сортируем предложения на бэкенде
     if (sortBy === 'price' || sortBy === 'delivery') {
@@ -73,6 +73,7 @@ router.get('/:id/offers', (req, res) => {
 
     res.json({ offers });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Failed to fetch product offers' });
   }
 });
@@ -93,6 +94,7 @@ router.get('/:id', (req, res) => {
     const { offers, ...productWithoutOffers } = detail;
     res.json(productWithoutOffers);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Failed to fetch product detail' });
   }
 });
