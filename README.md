@@ -147,7 +147,7 @@ src/
 
 ```env
 # API конфигурация
-NUXT_PUBLIC_API_BASE=http://localhost:3001/api
+NUXT_PUBLIC_API_BASE=http://localhost:3001
 
 # Mock API настройки
 MOCK_API_PORT=3001
@@ -272,6 +272,136 @@ ANALYZE=true pnpm build
 
 # Откройте dist/bundle-visualizer.html в браузере
 ```
+
+## Деплой на Vercel
+
+Проект настроен для деплоя на Vercel. Nuxt 3 автоматически определяет Vercel preset и создает serverless functions для API routes.
+
+### Подготовка к деплою
+
+1. **Убедитесь, что preset установлен на 'vercel'** в `nuxt.config.ts`:
+
+   ```typescript
+   nitro: {
+     preset: 'vercel',
+   }
+   ```
+
+2. **API routes уже настроены** в `src/server/api/`:
+   - `src/server/api/products/index.get.ts` - список продуктов
+   - `src/server/api/products/[id].get.ts` - детали продукта
+   - `src/server/api/products/[id]/offers.get.ts` - предложения продавцов
+
+### Вариант 1: Деплой через Vercel CLI
+
+1. **Установите Vercel CLI** (если еще не установлен):
+
+   ```bash
+   npm i -g vercel
+   # или
+   pnpm add -g vercel
+   ```
+
+2. **Войдите в Vercel**:
+
+   ```bash
+   vercel login
+   ```
+
+3. **Деплой проекта**:
+
+   ```bash
+   # Первый деплой (создаст проект)
+   vercel
+
+   # Production деплой
+   vercel --prod
+   ```
+
+4. **Настройте переменные окружения** (если нужно):
+
+   ```bash
+   # Через CLI
+   vercel env add NUXT_PUBLIC_API_BASE
+
+   # Или через веб-интерфейс Vercel Dashboard
+   # Settings → Environment Variables
+   ```
+
+   **Важно**: На Vercel API routes доступны на том же домене, поэтому:
+   - Для production: `NUXT_PUBLIC_API_BASE` можно оставить пустым или установить в `https://your-domain.vercel.app/api`
+   - Или просто не устанавливать переменную - API будет работать через относительные пути
+
+### Вариант 2: Деплой через GitHub интеграцию
+
+1. **Подключите репозиторий к Vercel**:
+   - Зайдите на [vercel.com](https://vercel.com)
+   - Нажмите "Add New Project"
+   - Выберите ваш GitHub репозиторий
+   - Vercel автоматически определит Nuxt 3 проект
+
+2. **Настройки проекта**:
+   - **Framework Preset**: Nuxt.js (определяется автоматически)
+   - **Build Command**: `pnpm build` (или `npm run build`)
+   - **Output Directory**: `.output` (устанавливается автоматически)
+   - **Install Command**: `pnpm install` (или `npm install`)
+
+3. **Переменные окружения**:
+   - В настройках проекта добавьте переменные окружения:
+     - `NUXT_PUBLIC_API_BASE` (опционально, можно оставить пустым)
+
+4. **Деплой**:
+   - После подключения репозитория, каждый push в `main`/`master` ветку автоматически создаст production деплой
+   - Pull requests создадут preview деплои
+
+### Проверка деплоя
+
+После деплоя проверьте:
+
+1. **Главная страница**: `https://your-project.vercel.app/`
+2. **API endpoints**:
+   - `https://your-project.vercel.app/api/products`
+   - `https://your-project.vercel.app/api/products/product-001`
+   - `https://your-project.vercel.app/api/products/product-001/offers?sortBy=price`
+
+### Особенности Vercel деплоя
+
+- **Serverless Functions**: API routes автоматически становятся serverless functions
+- **Edge Network**: Статические файлы раздаются через CDN
+- **Automatic HTTPS**: SSL сертификаты настраиваются автоматически
+- **Preview Deployments**: Каждый PR получает уникальный URL для тестирования
+- **Environment Variables**: Безопасное хранение секретов
+
+### Локальная проверка перед деплоем
+
+Проверьте production сборку локально:
+
+```bash
+# Соберите проект
+pnpm build
+
+# Запустите preview
+pnpm preview
+```
+
+Приложение будет доступно на `http://localhost:3000` с production оптимизациями.
+
+### Troubleshooting
+
+**Проблема**: API routes не работают
+
+- **Решение**: Убедитесь, что `preset: 'vercel'` установлен в `nuxt.config.ts`
+- Проверьте, что файлы в `src/server/api/` имеют правильные расширения (`.get.ts`, `.post.ts` и т.д.)
+
+**Проблема**: Ошибки при сборке
+
+- **Решение**: Проверьте логи в Vercel Dashboard → Deployments → Build Logs
+- Убедитесь, что все зависимости указаны в `package.json`
+
+**Проблема**: Переменные окружения не работают
+
+- **Решение**: Переменные должны начинаться с `NUXT_PUBLIC_` для клиентской части
+- После добавления переменных, передеплойте проект
 
 ## Скрипты
 
