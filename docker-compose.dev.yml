@@ -1,0 +1,22 @@
+services:
+  # Nuxt dev server + Mock API (both in one container)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000' # Nuxt dev server
+      - '3001:3001' # Mock API
+    container_name: market_template_ts_dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - NUXT_PUBLIC_API_BASE=${NUXT_PUBLIC_API_BASE}
+      - MOCK_API_PORT=${MOCK_API_PORT}
+      - MOCK_API_CORS_ORIGIN=${MOCK_API_CORS_ORIGIN}
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.nuxt

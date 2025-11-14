@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Disallow admin and API
+Disallow: /api/
+Disallow: /_nuxt/
+
+# Allow important pages
+Allow: /
+Allow: /products/
